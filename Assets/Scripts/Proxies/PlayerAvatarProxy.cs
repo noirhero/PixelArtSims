@@ -3,28 +3,28 @@
 using System.Linq;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 using Components;
+using Preset;
 
 namespace Proxies {
     [DisallowMultipleComponent]
     [RequiresEntityConversion]
     public class PlayerAvatarProxy : MonoBehaviour, IConvertGameObjectToEntity {
-        public Preset.SpritePreset preset = null;
+        [FormerlySerializedAs("preset")] public SpritePreset spritePreset = null;
+        public GUIPreset guiPreset = null;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {
-            if (null == preset) {
+            if (null == spritePreset || null == guiPreset) {
                 Debug.Log("Set preset, now!!!!!");
                 dstManager.DestroyEntity(entity);
                 return;
             }
-
+            
             dstManager.AddComponentData(entity, new PlayerAvatarComponent());
-            dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
-                preset = preset
-            });
             dstManager.AddComponentData(entity, new SpriteAnimComponent() {
-                hash = preset.datas.Keys.First()
+                hash = spritePreset.datas.Keys.First()
             });
             dstManager.AddComponentData(entity, new VelocityComponent() {
                 xValue = 1.0f
@@ -32,6 +32,14 @@ namespace Proxies {
             dstManager.AddComponentData(entity, new ForceStateComponent() {
                 useEntity = Entity.Null,
                 state = (int)ForceState.None
+            });
+            
+            // shared
+            dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
+                preset = spritePreset
+            });
+            dstManager.AddSharedComponentData(entity, new GUIPresetComponent() {
+                preset = guiPreset
             });
         }
     }

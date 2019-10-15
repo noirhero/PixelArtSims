@@ -16,8 +16,8 @@ namespace Systems {
                     var cameraTransform = cameraComp.cameraObject.transform;
                     var position = cameraTransform.position;
                     var at = (posX - position.x) * dt;
-                    position = new Vector3(position.x + at, position.y, position.z);
-                    cameraComp.cameraObject.transform.position = position;
+
+                    cameraComp.cameraObject.transform.position = new Vector3(position.x + at, position.y, position.z);
                 });
             });
         }

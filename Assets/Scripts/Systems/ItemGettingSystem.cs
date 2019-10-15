@@ -1,10 +1,10 @@
 ﻿// Copyright 2018-2019 TAP, Inc. All Rights Reserved.
 
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Transforms;
+
+using Components;
 
 namespace Systems {
     public class ItemGettingSystem : JobComponentSystem {
@@ -18,14 +18,15 @@ namespace Systems {
                 if (0 == inventoryComp.item01) {
                     inventoryComp.item01 = inventoryComp.currentGettingItem;
                 }
-                if (0 == inventoryComp.item02) {
+                else if (0 == inventoryComp.item02) {
                     inventoryComp.item02 = inventoryComp.currentGettingItem;
                 }
-                if (0 == inventoryComp.item03) {
+                else if (0 == inventoryComp.item03) {
                     inventoryComp.item03 = inventoryComp.currentGettingItem;
                 }
-                
-                // Todo: Choose drop item.
+                else {
+                    // Todo: Choose drop item.
+                }
 
                 inventoryComp.currentGettingItem = 0;
             }

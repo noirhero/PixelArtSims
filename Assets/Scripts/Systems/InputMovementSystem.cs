@@ -1,6 +1,5 @@
 ﻿// Copyright 2018-2019 TAP, Inc. All Rights Reserved.
 
-using System.ComponentModel;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;

@@ -4,6 +4,7 @@ using Unity.Entities;
 using UnityEngine;
 
 using Components;
+using Unity.Transforms;
 
 namespace Proxies {
     [DisallowMultipleComponent]
@@ -14,10 +15,14 @@ namespace Proxies {
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {
             if (null == cameraObject) {
-                Debug.Log("Set camera, now!!!!!");
+                Debug.LogError("Set camera, now!!!!!");
                 dstManager.DestroyEntity(entity);
                 return;
             }
+
+            dstManager.RemoveComponent<Translation>(entity);
+            dstManager.RemoveComponent<Rotation>(entity);
+            dstManager.RemoveComponent<LocalToWorld>(entity);
 
             dstManager.AddSharedComponentData(entity, new CameraObjectComponent() {
                 cameraObject = cameraObject

@@ -12,17 +12,18 @@ namespace Proxies {
     [DisallowMultipleComponent]
     [RequiresEntityConversion]
     public class PlayerAvatarProxy : MonoBehaviour, IConvertGameObjectToEntity {
-        [FormerlySerializedAs("preset")] public SpritePreset spritePreset = null;
+        public SpritePreset spritePreset = null;
         public GUIPreset guiPreset = null;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {
             if (null == spritePreset || null == guiPreset) {
-                Debug.Log("Set preset, now!!!!!");
+                Debug.LogError("Set preset, now!!!!!");
                 dstManager.DestroyEntity(entity);
                 return;
             }
             
             dstManager.AddComponentData(entity, new PlayerAvatarComponent());
+            dstManager.AddComponentData(entity, new InventoryComponent());
             dstManager.AddComponentData(entity, new SpriteAnimComponent() {
                 hash = spritePreset.datas.Keys.First()
             });

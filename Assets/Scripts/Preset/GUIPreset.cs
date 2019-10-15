@@ -1,26 +1,23 @@
 ﻿// Copyright 2018-2019 TAP, Inc. All Rights Reserved.
 
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Preset {
     public class GUIPreset : MonoBehaviour {
-        public Image[] items = new Image[3];
-        public List<Texture> itemImages = new List<Texture>();
+        public Canvas canvas = null;
 
-        public GameObject forceStateBallon = null;
+        public Image[] items = new Image[3];
+        public List<Sprite> itemSprites = new List<Sprite>();
+
+        public GameObject forceStateBalloon = null;
 
         public Slider sanGaugeSlider = null;
 
         private void Awake() {
 #if UNITY_EDITOR
-            foreach (var itemImage in items) {
-                itemImage.sprite = null;
-            }
-
             sanGaugeSlider.gameObject.SetActive(true);
 #endif
         }

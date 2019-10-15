@@ -37,6 +37,9 @@ sysinfo.txt
 # Unity3D editor user setting files
 EditorUserSettings.asset
 
+# Unity3D log files
+Logs
+
 # Builds
 *.apk
 *.unitypackage

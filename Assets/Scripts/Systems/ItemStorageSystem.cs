@@ -22,6 +22,7 @@ namespace Systems {
             [ReadOnly] public float deltaTime;
             [ReadOnly] public float playerPosX;
             [ReadOnly] public ForceStateComponent playerForceState;
+            [ReadOnly] public InventoryComponent inventory;
             [ReadOnly] public Entity playerAvatar;
             public EntityCommandBuffer.Concurrent cmdBuf;
 
@@ -34,6 +35,13 @@ namespace Systems {
                 if (playerForceState.useEntity == entity) {
                     var lifeTime = playerForceState.time - deltaTime;
                     if (0.0f >= lifeTime) {
+                        cmdBuf.SetComponent(index, playerAvatar, new InventoryComponent() {
+                            item01 = inventory.item01,
+                            item02 = inventory.item02,
+                            item03 = inventory.item03,
+                            currentGettingItem = itemStorageComp.index
+                        });
+
                         itemStorageComp.index = 0;
 
                         cmdBuf.SetComponent(index, playerAvatar, new ForceStateComponent() {
@@ -72,10 +80,13 @@ namespace Systems {
 
             var entities = EntityManager.GetAllEntities();
             foreach (var entity in entities.Where(entity =>
-                EntityManager.HasComponent(entity, typeof(PlayerAvatarComponent)))) {
+                EntityManager.HasComponent(entity, typeof(PlayerAvatarComponent)) &&
+                EntityManager.HasComponent(entity, typeof(InventoryComponent))
+            )) {
                 job.playerAvatar = entity;
                 job.playerPosX = EntityManager.GetComponentData<Translation>(entity).Value.x;
                 job.playerForceState = EntityManager.GetComponentData<ForceStateComponent>(entity);
+                job.inventory = EntityManager.GetComponentData<InventoryComponent>(entity);
                 break;
             }
             entities.Dispose();

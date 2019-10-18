@@ -110,7 +110,7 @@ namespace SuperTiled2Unity.Editor
 
             // Add the object to the parent
             goLayer.name = layerComponent.m_TiledName;
-            goParent.AddChildWithUniqueName(goLayer, loader.WorldPositionStays);
+            goParent.AddChildWithUniqueName(goLayer, false);
 
             // Position the layer based on the x, y offsets and pixels per unit
             goLayer.transform.localPosition += (Vector3)importContext.MakePoint(layerComponent.m_OffsetX, layerComponent.m_OffsetY);

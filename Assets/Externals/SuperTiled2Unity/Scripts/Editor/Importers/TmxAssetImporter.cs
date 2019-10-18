@@ -81,8 +81,11 @@ namespace SuperTiled2Unity.Editor
                 // Custom properties need to be in place before we process the map layers
                 AddSuperCustomProperties(m_MapComponent.gameObject, xMap.Element("properties"));
 
-                // Add layers to our grid object
-                ProcessMapLayers(m_GridComponent.gameObject, xMap);
+                using (SuperImportContext.BeginIsTriggerOverride(m_MapComponent.gameObject))
+                {
+                    // Add layers to our grid object
+                    ProcessMapLayers(m_GridComponent.gameObject, xMap);
+                }
             }
         }
 
@@ -146,14 +149,14 @@ namespace SuperTiled2Unity.Editor
             float sx = SuperImportContext.MakeScalar(m_MapComponent.m_TileWidth);
             float sy = SuperImportContext.MakeScalar(m_MapComponent.m_TileHeight);
             m_GridComponent.cellSize = new Vector3(sx, sy, 1);
-            var localPosition = new Vector3(0, 0, 0);
+            var tileLayerOffset = new Vector3(0, 0, 0);
 
             switch (m_MapComponent.m_Orientation)
             {
 #if UNITY_2018_3_OR_NEWER
                 case MapOrientation.Isometric:
                     m_GridComponent.cellLayout = GridLayout.CellLayout.Isometric;
-                    localPosition = new Vector3(0, -sy, 0);
+                    tileLayerOffset = new Vector3(0, -sy, 0);
                     break;
 
                 case MapOrientation.Staggered:
@@ -163,22 +166,22 @@ namespace SuperTiled2Unity.Editor
                     {
                         if (m_MapComponent.m_StaggerIndex == StaggerIndex.Odd)
                         {
-                            localPosition = new Vector3(sx * 0.5f, -sy, 0);
+                            tileLayerOffset = new Vector3(sx * 0.5f, -sy, 0);
                         }
                         else
                         {
-                            localPosition = new Vector3(sx, -sy, 0);
+                            tileLayerOffset = new Vector3(sx, -sy, 0);
                         }
                     }
                     else if (m_MapComponent.m_StaggerAxis == StaggerAxis.X)
                     {
                         if (m_MapComponent.m_StaggerIndex == StaggerIndex.Odd)
                         {
-                            localPosition = new Vector3(sx * 0.5f, -sy, 0);
+                            tileLayerOffset = new Vector3(sx * 0.5f, -sy, 0);
                         }
                         else
                         {
-                            localPosition = new Vector3(sx * 0.5f, -sy * 1.5f, 0);
+                            tileLayerOffset = new Vector3(sx * 0.5f, -sy * 1.5f, 0);
                         }
                     }
                     break;
@@ -192,11 +195,11 @@ namespace SuperTiled2Unity.Editor
 
                         if (m_MapComponent.m_StaggerIndex == StaggerIndex.Odd)
                         {
-                            localPosition = new Vector3(sx * 0.5f, sy * -0.5f, 0);
+                            tileLayerOffset = new Vector3(sx * 0.5f, sy * -0.5f, 0);
                         }
                         else
                         {
-                            localPosition = new Vector3(sx * 0.5f, sy * 0.25f, 0);
+                            tileLayerOffset = new Vector3(sx * 0.5f, sy * 0.25f, 0);
                         }
                     }
                     else if (m_MapComponent.m_StaggerAxis == StaggerAxis.X)
@@ -208,22 +211,22 @@ namespace SuperTiled2Unity.Editor
 
                         if (m_MapComponent.m_StaggerIndex == StaggerIndex.Odd)
                         {
-                            localPosition = new Vector3(sx * -0.25f, -sy, 0);
+                            tileLayerOffset = new Vector3(sx * -0.25f, -sy, 0);
                         }
                         else
                         {
-                            localPosition = new Vector3(sx * 0.5f, -sy, 0);
+                            tileLayerOffset = new Vector3(sx * 0.5f, -sy, 0);
                         }
                     }
                     break;
 #endif
                 default:
                     m_GridComponent.cellLayout = GridLayout.CellLayout.Rectangle;
-                    localPosition = new Vector3(0, -sy, 0);
+                    tileLayerOffset = new Vector3(0, -sy, 0);
                     break;
             }
 
-            m_GridComponent.transform.localPosition = localPosition;
+            SuperImportContext.TileLayerOffset = tileLayerOffset;
 
             return true;
         }
@@ -327,21 +330,30 @@ namespace SuperTiled2Unity.Editor
                     continue;
                 }
 
-                if (xNode.Name == "layer")
+                LayerIgnoreMode ignoreMode = xNode.GetPropertyAttributeAs(StringConstants.Unity_Ignore, SuperImportContext.LayerIgnoreMode);
+                if (ignoreMode == LayerIgnoreMode.True)
                 {
-                    ProcessTileLayer(goParent, xNode);
+                    continue;
                 }
-                else if (xNode.Name == "group")
+
+                using (SuperImportContext.BeginLayerIgnoreMode(ignoreMode))
                 {
-                    ProcessGroupLayer(goParent, xNode);
-                }
-                else if (xNode.Name == "objectgroup")
-                {
-                    ProcessObjectLayer(goParent, xNode);
-                }
-                else if (xNode.Name == "imagelayer")
-                {
-                    ProcessImageLayer(goParent, xNode);
+                    if (xNode.Name == "layer")
+                    {
+                        ProcessTileLayer(goParent, xNode);
+                    }
+                    else if (xNode.Name == "group")
+                    {
+                        ProcessGroupLayer(goParent, xNode);
+                    }
+                    else if (xNode.Name == "objectgroup")
+                    {
+                        ProcessObjectLayer(goParent, xNode);
+                    }
+                    else if (xNode.Name == "imagelayer")
+                    {
+                        ProcessImageLayer(goParent, xNode);
+                    }
                 }
             }
         }

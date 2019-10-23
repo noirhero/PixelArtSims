@@ -3,7 +3,6 @@
 using System.Linq;
 using Unity.Entities;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 using Components;
 using Preset;
@@ -14,6 +13,7 @@ namespace Proxies {
     public class PlayerAvatarProxy : MonoBehaviour, IConvertGameObjectToEntity {
         public SpritePreset spritePreset = null;
         public GUIPreset guiPreset = null;
+        public AudioClip footfall = null;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {
             if (null == spritePreset || null == guiPreset) {
@@ -21,7 +21,7 @@ namespace Proxies {
                 dstManager.DestroyEntity(entity);
                 return;
             }
-            
+
             dstManager.AddComponentData(entity, new PlayerAvatarComponent());
             dstManager.AddComponentData(entity, new InventoryComponent());
             dstManager.AddComponentData(entity, new SpriteAnimComponent() {
@@ -34,7 +34,7 @@ namespace Proxies {
                 useEntity = Entity.Null,
                 state = (int)ForceState.None
             });
-            
+
             // shared
             dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
                 preset = spritePreset
@@ -42,6 +42,16 @@ namespace Proxies {
             dstManager.AddSharedComponentData(entity, new GUIPresetComponent() {
                 preset = guiPreset
             });
+
+            if (null != footfall) {
+                dstManager.AddSharedComponentData(entity, new AudioClipComponent() {
+                    clip = footfall
+                });
+                dstManager.AddComponentData(entity, new FootfallComponent() {
+                    interval = 0.5f,
+                    accumTime = 0.0f
+                });
+            }
         }
     }
 }

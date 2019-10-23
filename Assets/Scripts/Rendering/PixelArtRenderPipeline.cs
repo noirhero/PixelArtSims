@@ -82,7 +82,7 @@ namespace Rendering {
             context.Submit();
         }
 
-        private const string _ppRenderCmdName = "BeforePostprocessRendering";
+        private const string _ppRenderCmdName = "PostprocessRendering";
         private void PostProcessingRendering(ScriptableRenderContext context, Camera camera, PostProcessLayer ppLayer) {
             var cullResults = context.Cull(ref _cullParam);
 

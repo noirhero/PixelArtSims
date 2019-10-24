@@ -3,11 +3,11 @@
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
+using Unity.Transforms;
 
 using SuperTiled2Unity;
 
 using Components;
-using Unity.Transforms;
 
 namespace Proxies {
     [DisallowMultipleComponent]

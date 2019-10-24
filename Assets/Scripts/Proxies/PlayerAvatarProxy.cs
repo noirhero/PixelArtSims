@@ -31,8 +31,11 @@ namespace Proxies {
                 xValue = 1.0f
             });
             dstManager.AddComponentData(entity, new ForceStateComponent() {
-                useEntity = Entity.Null,
+                setterEntity = Entity.Null,
                 state = (int)ForceState.None
+            });
+            dstManager.AddComponentData(entity, new AvatarPropertyComponent() {
+                eyesight = 1.0f
             });
 
             // shared

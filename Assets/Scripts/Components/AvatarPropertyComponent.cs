@@ -5,7 +5,8 @@ using Unity.Entities;
 
 namespace Components {
     [Serializable]
-    public struct OldOneComponent : IComponentData {
+    public struct AvatarPropertyComponent : IComponentData {
+        public float eyesight;
         public float madness;
     }
 }

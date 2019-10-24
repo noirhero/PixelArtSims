@@ -12,7 +12,7 @@ namespace Components {
 
     [Serializable]
     public struct ForceStateComponent : IComponentData {
-        public Entity useEntity;
+        public Entity setterEntity;
         public float time;
         public int state;
     }

@@ -11,11 +11,22 @@ namespace GO {
         private const int _step = 3;
         private float _aniTime = 0.0f;
         private int _aniStep = 0;
+
         private readonly string[] _commaStrs = new string[_step] {
             ".",
             "..",
             "..."
         };
+
+        public Slider madnessGauge = null;
+
+        private void Awake() {
+#if UNITY_EDITOR
+            if (null != madnessGauge) {
+                madnessGauge.enabled = true;
+            }
+#endif
+        }
 
         void Update() {
             _aniTime += Time.deltaTime;

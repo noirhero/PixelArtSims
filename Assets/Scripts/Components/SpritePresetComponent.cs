@@ -2,12 +2,13 @@
 
 using System;
 using Unity.Entities;
-using UnityEngine.Serialization;
+
+using Preset;
 
 namespace Components {
     [Serializable]
     public struct SpritePresetComponent : ISharedComponentData, IEquatable<SpritePresetComponent> {
-        public Preset.SpritePreset preset;
+        public SpritePreset preset;
 
         public bool Equals(SpritePresetComponent other) {
             return preset == other.preset;

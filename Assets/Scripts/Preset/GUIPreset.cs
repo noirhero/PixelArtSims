@@ -13,11 +13,11 @@ namespace Preset {
 
         public GameObject forceStateBalloon = null;
 
-        public Slider sanGaugeSlider = null;
+        public Slider madnessGaugeSlider = null;
 
         private void Awake() {
 #if UNITY_EDITOR
-            sanGaugeSlider.gameObject.SetActive(true);
+            madnessGaugeSlider.gameObject.SetActive(true);
 #endif
         }
     }

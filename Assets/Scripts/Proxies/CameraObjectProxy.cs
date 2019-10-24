@@ -2,16 +2,15 @@
 
 using Unity.Entities;
 using UnityEngine;
+using Unity.Transforms;
 
 using Components;
-using Unity.Transforms;
 
 namespace Proxies {
     [DisallowMultipleComponent]
     [RequiresEntityConversion]
     public class CameraObjectProxy : MonoBehaviour, IConvertGameObjectToEntity {
         public GameObject cameraObject = null;
-
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {
             if (null == cameraObject) {

@@ -2,9 +2,10 @@
 
 using System;
 using System.Collections.Generic;
-using RotaryHeart.Lib.SerializableDictionary;
 using Unity.Mathematics;
 using UnityEngine;
+
+using RotaryHeart.Lib.SerializableDictionary;
 
 namespace Preset {
     [Serializable]
@@ -18,8 +19,7 @@ namespace Preset {
     }
 
     [Serializable]
-    public class SpritePresetDataDictionary : SerializableDictionaryBase<int, SpritePresetData> {
-    }
+    public class SpritePresetDataDictionary : SerializableDictionaryBase<int, SpritePresetData> {}
 
     [Serializable]
     public class SpritePreset : MonoBehaviour {

@@ -23,8 +23,8 @@ namespace Systems {
         }
 
         protected override void OnUpdate() {
-            Entities.ForEach((GUIPresetComponent guiPrestComp, ref InventoryComponent inventoryComp) => {
-                GUIPreset guiPreset = guiPrestComp.preset;
+            Entities.ForEach((GUIPresetComponent guiPresetComp, ref InventoryComponent inventoryComp) => {
+                GUIPreset guiPreset = guiPresetComp.preset;
 
                 ItemGUIProcess(guiPreset.items[0], inventoryComp.item01, guiPreset.itemSprites);
                 ItemGUIProcess(guiPreset.items[1], inventoryComp.item02, guiPreset.itemSprites);

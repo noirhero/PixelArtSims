@@ -23,7 +23,7 @@ namespace Systems {
             [ReadOnly] public float playerPosX;
             [ReadOnly] public ForceStateComponent playerForceState;
             [ReadOnly] public InventoryComponent inventory;
-            [ReadOnly] public Entity playerAvatar;
+            public Entity playerAvatar;
             public EntityCommandBuffer.Concurrent cmdBuf;
 
             public void Execute(Entity entity, int index, [ReadOnly] ref Translation posComp,
@@ -32,7 +32,7 @@ namespace Systems {
                     return;
                 }
 
-                if (playerForceState.useEntity == entity) {
+                if (playerForceState.setterEntity == entity) {
                     var lifeTime = playerForceState.time - deltaTime;
                     if (0.0f >= lifeTime) {
                         cmdBuf.SetComponent(index, playerAvatar, new InventoryComponent() {
@@ -45,26 +45,26 @@ namespace Systems {
                         itemStorageComp.index = 0;
 
                         cmdBuf.SetComponent(index, playerAvatar, new ForceStateComponent() {
-                            useEntity = Entity.Null,
+                            setterEntity = Entity.Null,
                             state = (int) ForceState.None
                         });
                     }
                     else {
                         cmdBuf.SetComponent(index, playerAvatar, new ForceStateComponent() {
-                            useEntity = entity,
+                            setterEntity = entity,
                             time = lifeTime,
                             state = (int) ForceState.Item
                         });
                     }
                 }
-                else if (playerForceState.useEntity == Entity.Null) {
+                else if (playerForceState.setterEntity == Entity.Null) {
                     var atPlayerPosDelta = math.abs(playerPosX - posComp.Value.x);
                     if (itemStorageComp.checkRadius < atPlayerPosDelta) {
                         return;
                     }
 
                     cmdBuf.SetComponent(index, playerAvatar, new ForceStateComponent() {
-                        useEntity = entity,
+                        setterEntity = entity,
                         time = itemStorageComp.forceStateTime,
                         state = (int) ForceState.Item
                     });

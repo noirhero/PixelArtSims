@@ -7,6 +7,7 @@ namespace Components {
     enum ForceState {
         None,
         Item,
+        Thinking,
         Count
     }
 

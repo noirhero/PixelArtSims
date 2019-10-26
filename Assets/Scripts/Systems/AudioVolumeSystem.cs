@@ -24,7 +24,7 @@ namespace Systems {
 
                 var source = audioSrcComp.source;
                 var volume = source.volume;
-                volume = math.clamp(volume + volumeDelta, 0.0f, 1.0f);
+                volume = math.clamp(volume + volumeDelta, audioVolumeComp.minVolume, audioVolumeComp.maxVolume);
                 source.volume = volume;
 
                 if (math.FLT_MIN_NORMAL > volume && source.isPlaying) {

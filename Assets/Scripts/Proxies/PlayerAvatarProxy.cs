@@ -11,9 +11,15 @@ namespace Proxies {
     [DisallowMultipleComponent]
     [RequiresEntityConversion]
     public class PlayerAvatarProxy : MonoBehaviour, IConvertGameObjectToEntity {
+        [Header("Preset")]
         public SpritePreset spritePreset = null;
         public GUIPreset guiPreset = null;
         public AudioClip footfall = null;
+
+        [Header("Property")]
+        public float eyesight = 1.0f;
+        public float agility = 1.0f;
+        public float intelligence = 1.0f;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {
             if (null == spritePreset || null == guiPreset) {
@@ -35,7 +41,9 @@ namespace Proxies {
                 state = (int)ForceState.None
             });
             dstManager.AddComponentData(entity, new AvatarPropertyComponent() {
-                eyesight = 1.0f
+                eyesight = eyesight,
+                agility = agility,
+                intelligence = intelligence
             });
 
             // shared

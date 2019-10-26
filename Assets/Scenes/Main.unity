@@ -190,7 +190,7 @@ GameObject:
   - component: {fileID: 248014877}
   - component: {fileID: 248014876}
   m_Layer: 0
-  m_Name: ManPreset
+  m_Name: PlayerAvatarPreset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,7 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff2124f9c9b098419ce4ba0707e6c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useTimeSec: 2
+  useTimeSec: 1
   randItemIndices: 0300000004000000
 --- !u!114 &337083084
 MonoBehaviour:
@@ -1248,6 +1248,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06cc76026aa1da544a1b510681e1ed9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minVolume: 0
+  maxVolume: 0.1
 --- !u!1 &1215751204
 GameObject:
   m_ObjectHideFlags: 0
@@ -1632,6 +1634,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06cc76026aa1da544a1b510681e1ed9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minVolume: 0
+  maxVolume: 0.1
 --- !u!114 &1583256461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2016,6 +2020,9 @@ MonoBehaviour:
   spritePreset: {fileID: 248014876}
   guiPreset: {fileID: 2024769486}
   footfall: {fileID: 8300000, guid: e876768ea7e9c434dbfada741227b230, type: 3}
+  eyesight: 1
+  agility: 1
+  intelligence: 1
 --- !u!212 &1882604205
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2609,7 +2616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff2124f9c9b098419ce4ba0707e6c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useTimeSec: 2
+  useTimeSec: 1
   randItemIndices: 0100000002000000
 --- !u!1 &2145846350
 GameObject:
@@ -2642,7 +2649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff2124f9c9b098419ce4ba0707e6c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useTimeSec: 2
+  useTimeSec: 1
   randItemIndices: 05000000
 --- !u!114 &2145846352
 MonoBehaviour:

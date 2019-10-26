@@ -21,19 +21,19 @@ namespace Systems {
         struct ItemStorageSystemJob : IJobForEachWithEntity<Translation, ItemStorageComponent> {
             [ReadOnly] public float deltaTime;
             [ReadOnly] public float playerPosX;
+            [ReadOnly] public float agility;
             [ReadOnly] public ForceStateComponent playerForceState;
             [ReadOnly] public InventoryComponent inventory;
             public Entity playerAvatar;
             public EntityCommandBuffer.Concurrent cmdBuf;
 
-            public void Execute(Entity entity, int index, [ReadOnly] ref Translation posComp,
-                ref ItemStorageComponent itemStorageComp) {
+            public void Execute(Entity entity, int index, [ReadOnly] ref Translation posComp, ref ItemStorageComponent itemStorageComp) {
                 if (0 == itemStorageComp.index) {
                     return;
                 }
 
                 if (playerForceState.setterEntity == entity) {
-                    var lifeTime = playerForceState.time - deltaTime;
+                    var lifeTime = playerForceState.time - (agility * deltaTime);
                     if (0.0f >= lifeTime) {
                         cmdBuf.SetComponent(index, playerAvatar, new InventoryComponent() {
                             item01 = inventory.item01,
@@ -80,11 +80,11 @@ namespace Systems {
 
             var entities = EntityManager.GetAllEntities();
             foreach (var entity in entities.Where(entity =>
-                EntityManager.HasComponent(entity, typeof(PlayerAvatarComponent)) &&
-                EntityManager.HasComponent(entity, typeof(InventoryComponent))
+                EntityManager.HasComponent(entity, typeof(PlayerAvatarComponent))
             )) {
                 job.playerAvatar = entity;
                 job.playerPosX = EntityManager.GetComponentData<Translation>(entity).Value.x;
+                job.agility = EntityManager.GetComponentData<AvatarPropertyComponent>(entity).agility;
                 job.playerForceState = EntityManager.GetComponentData<ForceStateComponent>(entity);
                 job.inventory = EntityManager.GetComponentData<InventoryComponent>(entity);
                 break;

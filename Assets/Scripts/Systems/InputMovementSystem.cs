@@ -1,7 +1,6 @@
 ﻿// Copyright 2018-2019 TAP, Inc. All Rights Reserved.
 
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
@@ -10,12 +9,12 @@ using UnityEngine.InputSystem;
 using Components;
 
 namespace Systems {
-    public class InputMovementSystem : JobComponentSystem {
-        struct InputMovementSystemJob : IJobForEach<ForceStateComponent, Translation, VelocityComponent> {
-            public float deltaTime;
-
-            public void Execute(ref ForceStateComponent forceStateComp, ref Translation posComp, ref VelocityComponent velocityComp) {
-                if (ForceState.None != (ForceState)forceStateComp.state) {
+    public class InputMovementSystem : ComponentSystem {
+        protected override void OnUpdate() {
+            float delta = Time.deltaTime;
+            Entities.ForEach((ref ForceStateComponent forceStateComp, ref VelocityComponent velocityComp) => {
+                if (ForceState.None != (ForceState) forceStateComp.state) {
+                    velocityComp.velocity.x = 0.0f;
                     return;
                 }
 
@@ -34,19 +33,7 @@ namespace Systems {
                     velocityComp.velocity.x -= 1.0f;
                     velocityComp.xValue = -1.0f;
                 }
-
-                if (math.FLT_MIN_NORMAL >= math.abs(velocityComp.velocity.x)) {
-                    return;
-                }
-
-                posComp.Value.x += velocityComp.velocity.x * deltaTime;
-            }
-        }
-
-        protected override JobHandle OnUpdate(JobHandle inputDependencies) {
-            return new InputMovementSystemJob() {
-                deltaTime = Time.deltaTime
-            }.Schedule(this, inputDependencies);
+            });
         }
     }
 }

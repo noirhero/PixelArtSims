@@ -38,11 +38,10 @@ namespace Systems {
                     // Looking direction different.
                     return;
                 }
-                
-                cmdBuf.SetComponent(playerEntity, new AvatarPropertyComponent() {
-                    eyesight = avatarComp.eyesight,
-                    madness = math.min(avatarComp.madness + oldOneComp.madness * deltaTime, 100.0f)
-                });
+
+                var newAvatarComp = avatarComp;
+                newAvatarComp.madness = math.min(avatarComp.madness + oldOneComp.madness * deltaTime, 100.0f);
+                cmdBuf.SetComponent(playerEntity, newAvatarComp);
             }
         }
 

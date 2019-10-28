@@ -6,6 +6,7 @@ using UnityEngine;
 
 using Components;
 using Preset;
+using Unity.Mathematics;
 
 namespace Proxies {
     [DisallowMultipleComponent]
@@ -44,6 +45,9 @@ namespace Proxies {
                 eyesight = eyesight,
                 agility = agility,
                 intelligence = intelligence
+            });
+            dstManager.AddComponentData(entity, new ThinkingComponent() {
+                entityToDistance = float.MaxValue
             });
 
             // shared

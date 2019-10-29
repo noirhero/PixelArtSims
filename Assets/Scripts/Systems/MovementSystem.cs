@@ -6,7 +6,6 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
 using UnityEngine;
-
 using Components;
 
 namespace Systems {
@@ -14,18 +13,16 @@ namespace Systems {
         [BurstCompile]
         struct MovementSystemJob : IJobForEach<Translation, VelocityComponent, AvatarPropertyComponent> {
             [ReadOnly] public float deltaTime;
-        
+
             public void Execute(ref Translation posComp, [ReadOnly] ref VelocityComponent velocityComp, [ReadOnly] ref AvatarPropertyComponent avatarComp) {
                 posComp.Value.x += velocityComp.velocity.x * avatarComp.agility * deltaTime;
             }
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDependencies) {
-            var job = new MovementSystemJob() {
+            return (new MovementSystemJob() {
                 deltaTime = Time.deltaTime
-            };
- 
-            return job.Schedule(this, inputDependencies);
+            }).Schedule(this, inputDependencies);
         }
     }
 }

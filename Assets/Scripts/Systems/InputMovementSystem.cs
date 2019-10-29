@@ -11,7 +11,7 @@ using Components;
 namespace Systems {
     public class InputMovementSystem : ComponentSystem {
         protected override void OnUpdate() {
-            float delta = Time.deltaTime;
+            var delta = Time.deltaTime;
             Entities.ForEach((ref ForceStateComponent forceStateComp, ref VelocityComponent velocityComp) => {
                 if (ForceState.None != (ForceState) forceStateComp.state) {
                     velocityComp.velocity.x = 0.0f;

@@ -37,20 +37,13 @@ namespace Proxies {
             dstManager.AddComponentData(entity, new VelocityComponent() {
                 xValue = 1.0f
             });
-            dstManager.AddComponentData(entity, new ForceStateComponent() {
-                setterEntity = Entity.Null,
-                state = (int)ForceState.None
-            });
             dstManager.AddComponentData(entity, new AvatarPropertyComponent() {
                 eyesight = eyesight,
                 agility = agility,
                 intelligence = intelligence
             });
-            dstManager.AddComponentData(entity, new ThinkingComponent() {
-                entityToDistance = float.MaxValue
-            });
+            dstManager.AddComponentData(entity, new ForceStateComponent());
 
-            // shared
             dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
                 preset = spritePreset
             });

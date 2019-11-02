@@ -8,6 +8,7 @@ https://kronbits.itch.io/pixatool
 # Todo
 ~~각종 사운드 효과 (트리거 형식 으로 배경음 페이드 인 아웃, 발 소리)~~  
 ~~콜리전 처리~~  
+ForceStateComponent 를 떼었다 붙였다 하기  
 발견 시스템.  
 생각 시스템.
 이동 시스템.  

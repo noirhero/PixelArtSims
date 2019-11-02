@@ -15,6 +15,7 @@ namespace Systems {
 
         protected override void OnCreate() {
             _cmdSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            Enabled = false;
         }
 
         struct EyesightSystemJob : IJobForEachWithEntity<Translation> {

@@ -7,14 +7,15 @@ using UnityEngine;
 namespace Components {
     [Serializable]
     public struct CameraObjectComponent : ISharedComponentData, IEquatable<CameraObjectComponent> {
-        public GameObject cameraObject;
+        public Transform cameraTransform;
+        public Camera camera;
 
         public bool Equals(CameraObjectComponent other) {
-            return cameraObject == other.cameraObject;
+            return camera == other.camera;
         }
 
         public override int GetHashCode() {
-            return (null == cameraObject) ? 0 : cameraObject.GetHashCode();
+            return (null == camera) ? 0 : camera.GetHashCode();
         }
     }
 }

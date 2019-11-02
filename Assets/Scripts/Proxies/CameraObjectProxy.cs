@@ -24,7 +24,8 @@ namespace Proxies {
             dstManager.RemoveComponent<LocalToWorld>(entity);
 
             dstManager.AddSharedComponentData(entity, new CameraObjectComponent() {
-                cameraObject = cameraObject
+                cameraTransform = cameraObject.transform,
+                camera = cameraObject.GetComponent<Camera>()
             });
         }
     }

@@ -10,10 +10,8 @@ namespace Systems {
     [UpdateAfter(typeof(InputMovementSystem))]
     public class WallSystem : ComponentSystem {
         protected override void OnUpdate() {
-            Entity playerAvatarEntity = Entity.Null;
-            Entities.ForEach((Entity entity, ref PlayerAvatarComponent playerAvatarComp) => {
-                playerAvatarEntity = entity;
-            });
+            var playerAvatarEntity = Entity.Null;
+            Entities.WithAll<PlayerAvatarComponent>().ForEach((Entity entity) => playerAvatarEntity = entity);
             if (Entity.Null == playerAvatarEntity) {
                 return;
             }

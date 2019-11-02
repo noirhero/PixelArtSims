@@ -19,10 +19,7 @@ namespace Systems {
 
             var screenPosX = 0.0f;
             Entities.ForEach((CameraObjectComponent cameraComp) => {
-                var camera = cameraComp.cameraObject.GetComponent<Camera>();
-                Debug.Assert(null != camera);
-
-                screenPosX = camera.WorldToScreenPoint(playerPos).x;
+                screenPosX = cameraComp.camera.WorldToScreenPoint(playerPos).x;
             });
 
             Entities.ForEach((GUIPresetComponent guiPresetComp, ref ForceStateComponent forceStateComp) => {

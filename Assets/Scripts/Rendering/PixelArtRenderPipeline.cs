@@ -1,5 +1,6 @@
 ﻿// Copyright 2018-2019 TAP, Inc. All Rights Reserved.
 
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
@@ -76,8 +77,12 @@ namespace Rendering {
 
             context.DrawRenderers(cullResults, ref _opaqueDrawing, ref _opaqueFiltering);
             context.DrawRenderers(cullResults, ref _transparentDrawing, ref _transparentFiltering);
-            context.DrawGizmos(camera, GizmoSubset.PreImageEffects);
-            context.DrawGizmos(camera, GizmoSubset.PostImageEffects);
+#if UNITY_EDITOR
+            if (CameraType.SceneView == camera.cameraType) {
+                context.DrawGizmos(camera, GizmoSubset.PreImageEffects);
+                context.DrawGizmos(camera, GizmoSubset.PostImageEffects);
+            }
+#endif
 
             context.Submit();
         }
@@ -104,8 +109,12 @@ namespace Rendering {
 
             context.DrawRenderers(cullResults, ref _opaqueDrawing, ref _opaqueFiltering);
             context.DrawRenderers(cullResults, ref _transparentDrawing, ref _transparentFiltering);
-            context.DrawGizmos(camera, GizmoSubset.PreImageEffects);
-            context.DrawGizmos(camera, GizmoSubset.PostImageEffects);
+#if UNITY_EDITOR
+            if (CameraType.SceneView == camera.cameraType) {
+                context.DrawGizmos(camera, GizmoSubset.PreImageEffects);
+                context.DrawGizmos(camera, GizmoSubset.PostImageEffects);
+            }
+#endif
 
             _ppContext.Reset();
             _ppContext.camera = camera;

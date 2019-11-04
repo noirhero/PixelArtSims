@@ -11,7 +11,9 @@ namespace Systems {
         protected override void OnUpdate() {
             var deltaTime = Time.deltaTime;
 
-            Entities.WithAll<PlayerAvatarComponent>().ForEach((Entity playerEntity, ref IntelligenceComponent intelligenceComp, ref ForceStateComponent forceStateComp) => {
+            Entities.WithAll<PlayerAvatarComponent>().ForEach((Entity playerEntity,
+                ref IntelligenceComponent intelligenceComp, ref ForceStateComponent forceStateComp,
+                ref VelocityComponent velocityComp) => {
                 if (Entity.Null == intelligenceComp.inEyesightEntity) {
                     return;
                 }
@@ -29,6 +31,13 @@ namespace Systems {
                         intelligenceComp.inEyesightEntity = Entity.Null;
                         intelligenceComp.inEyesightEntityToDistance = float.MaxValue;
                         forceStateComp.state = (int) ForceState.None;
+                        break;
+                    case ReactiveType.Wall:
+                    case ReactiveType.Something:
+                        intelligenceComp.inEyesightEntity = Entity.Null;
+                        intelligenceComp.inEyesightEntityToDistance = float.MaxValue;
+                        forceStateComp.state = (int) ForceState.None;
+                        velocityComp.xValue *= -1.0f;
                         break;
                 }
             });

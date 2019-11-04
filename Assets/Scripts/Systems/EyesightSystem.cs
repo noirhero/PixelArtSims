@@ -41,7 +41,7 @@ namespace Systems {
                     return;
                 }
 
-                var thinkingTime = propComp.intelligence;
+                var thinkingTime = 1.0f;
                 switch ((ReactiveType) reactiveComp.type) {
                     case ReactiveType.Item: thinkingTime *= 0.5f;
                         break;
@@ -52,7 +52,9 @@ namespace Systems {
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                
+
+                thinkingTime -= propComp.intelligence;
+
                 cmdBuf.SetComponent(index, playerEntity, new IntelligenceComponent() {
                     inEyesightEntity = entity,
                     inEyesightEntityReactiveType = reactiveComp.type,

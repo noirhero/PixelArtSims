@@ -21,7 +21,7 @@ namespace Proxies {
 
             dstManager.RemoveComponent<LocalToWorld>(entity);
             dstManager.RemoveComponent<Rotation>(entity);
-            dstManager.RemoveComponent<Translation>(entity);
+            //dstManager.RemoveComponent<Translation>(entity);
 
             var pos = transform.position;
             dstManager.AddComponentData(entity, new WallComponent() {

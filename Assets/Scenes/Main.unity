@@ -2021,8 +2021,8 @@ MonoBehaviour:
   guiPreset: {fileID: 2024769486}
   footfall: {fileID: 8300000, guid: e876768ea7e9c434dbfada741227b230, type: 3}
   eyesight: 1
-  agility: 1
-  intelligence: 1
+  agility: 2
+  intelligence: 2
 --- !u!212 &1882604205
 SpriteRenderer:
   m_ObjectHideFlags: 0

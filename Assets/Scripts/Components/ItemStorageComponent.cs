@@ -7,7 +7,7 @@ namespace Components {
     [Serializable]
     public struct ItemStorageComponent : IComponentData {
         public int index;
-        public float forceStateTime;
+        public float gettingTime;
         public float checkRadius;
     }
 }

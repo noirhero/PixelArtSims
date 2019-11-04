@@ -25,7 +25,7 @@ namespace Systems {
                     return;
                 }
 
-                float at = (wallComp.pos.x < playerPos.x) ? 1.0f : -1.0f;
+                var at = (wallComp.pos.x < playerPos.x) ? 1.0f : -1.0f;
                 playerPos.x = boxPosX + at * halfBoxSizeX;
 
                 EntityManager.SetComponentData(playerAvatarEntity, new Translation() {

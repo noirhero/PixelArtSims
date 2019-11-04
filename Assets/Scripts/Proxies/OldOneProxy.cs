@@ -26,6 +26,9 @@ namespace Proxies {
             dstManager.AddComponentData(entity, new SpriteAnimComponent() {
                 hash = spritePreset.datas.Keys.First()
             });
+            dstManager.AddComponentData(entity, new ReactiveComponent() {
+                type = (int) ReactiveType.Something
+            });
             dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
                 preset = spritePreset
             });

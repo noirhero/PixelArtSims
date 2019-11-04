@@ -25,10 +25,14 @@ namespace Proxies {
 
             dstManager.RemoveComponent<Rotation>(entity);
             dstManager.RemoveComponent<LocalToWorld>(entity);
+
             dstManager.AddComponentData(entity, new ItemStorageComponent() {
                 index = randItemIndices[new System.Random().Next(0, randItemIndices.Count)],
-                forceStateTime = useTimeSec,
+                gettingTime = useTimeSec,
                 checkRadius = GetComponent<SphereCollider>().radius 
+            });
+            dstManager.AddComponentData(entity, new ReactiveComponent() {
+                type = (int) ReactiveType.Item
             });
         }
     }

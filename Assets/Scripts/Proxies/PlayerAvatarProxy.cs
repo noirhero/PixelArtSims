@@ -43,6 +43,9 @@ namespace Proxies {
                 intelligence = intelligence
             });
             dstManager.AddComponentData(entity, new ForceStateComponent());
+            dstManager.AddComponentData(entity, new IntelligenceComponent() {
+                inEyesightEntityToDistance = float.MaxValue
+            });
 
             dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
                 preset = spritePreset

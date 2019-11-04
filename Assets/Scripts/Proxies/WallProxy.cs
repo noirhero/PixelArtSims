@@ -29,6 +29,9 @@ namespace Proxies {
                 size = boxCollision.size,
                 offset = boxCollision.offset
             });
+            dstManager.AddComponentData(entity, new ReactiveComponent() {
+                type = (int) ReactiveType.Wall
+            });
         }
     }
 }

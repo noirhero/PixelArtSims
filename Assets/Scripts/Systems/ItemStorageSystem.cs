@@ -18,57 +18,38 @@ namespace Systems {
             _cmdSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
 
+        [RequireComponentTag(typeof(ReactingItemComponent))]
         struct ItemStorageSystemJob : IJobForEachWithEntity<Translation, ItemStorageComponent> {
             [ReadOnly] public float deltaTime;
             [ReadOnly] public float playerPosX;
             [ReadOnly] public float agility;
             [ReadOnly] public ForceStateComponent playerForceState;
             [ReadOnly] public InventoryComponent inventory;
-            public Entity playerAvatar;
+            public Entity playerEntity;
             public EntityCommandBuffer.Concurrent cmdBuf;
 
             public void Execute(Entity entity, int index, [ReadOnly] ref Translation posComp, ref ItemStorageComponent itemStorageComp) {
-                if (0 == itemStorageComp.index) {
+                var atPlayerPosDelta = math.abs(playerPosX - posComp.Value.x);
+                if (itemStorageComp.checkRadius < atPlayerPosDelta) {
                     return;
                 }
 
-                if (playerForceState.setterEntity == entity) {
-                    var lifeTime = playerForceState.time - (agility * deltaTime);
-                    if (0.0f >= lifeTime) {
-                        cmdBuf.SetComponent(index, playerAvatar, new InventoryComponent() {
-                            item01 = inventory.item01,
-                            item02 = inventory.item02,
-                            item03 = inventory.item03,
-                            currentGettingItem = itemStorageComp.index
-                        });
-
-                        itemStorageComp.index = 0;
-
-                        cmdBuf.SetComponent(index, playerAvatar, new ForceStateComponent() {
-                            setterEntity = Entity.Null,
-                            state = (int) ForceState.None
-                        });
-                    }
-                    else {
-                        cmdBuf.SetComponent(index, playerAvatar, new ForceStateComponent() {
-                            setterEntity = entity,
-                            time = lifeTime,
-                            state = (int) ForceState.Item
-                        });
-                    }
-                }
-                else if (playerForceState.setterEntity == Entity.Null) {
-                    var atPlayerPosDelta = math.abs(playerPosX - posComp.Value.x);
-                    if (itemStorageComp.checkRadius < atPlayerPosDelta) {
-                        return;
-                    }
-
-                    cmdBuf.SetComponent(index, playerAvatar, new ForceStateComponent() {
-                        setterEntity = entity,
-                        time = itemStorageComp.forceStateTime,
+                itemStorageComp.gettingTime -= (agility * deltaTime);
+                if (0.0f < itemStorageComp.gettingTime) {
+                    cmdBuf.SetComponent(index, playerEntity, new ForceStateComponent() {
                         state = (int) ForceState.Item
                     });
+                    return;
                 }
+
+                var newInventoryComp = inventory;
+                newInventoryComp.currentGettingItem = itemStorageComp.index;
+                cmdBuf.SetComponent(index, playerEntity, newInventoryComp);
+                cmdBuf.SetComponent(index, playerEntity, new ForceStateComponent() {
+                    state = (int) ForceState.None
+                });
+
+                cmdBuf.DestroyEntity(index, entity);
             }
         }
 
@@ -82,7 +63,7 @@ namespace Systems {
             foreach (var entity in entities.Where(entity =>
                 EntityManager.HasComponent(entity, typeof(PlayerAvatarComponent))
             )) {
-                job.playerAvatar = entity;
+                job.playerEntity = entity;
                 job.playerPosX = EntityManager.GetComponentData<Translation>(entity).Value.x;
                 job.agility = EntityManager.GetComponentData<AvatarPropertyComponent>(entity).agility;
                 job.playerForceState = EntityManager.GetComponentData<ForceStateComponent>(entity);

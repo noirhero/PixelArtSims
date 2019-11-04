@@ -4,15 +4,15 @@ using System;
 using Unity.Entities;
 
 namespace Components {
-    enum ForceState {
+    public enum ReactiveType {
         None,
+        Wall,
         Item,
-        Thinking,
-        Count
+        Something
     }
 
     [Serializable]
-    public struct ForceStateComponent : IComponentData {
-        public int state;
+    public struct ReactiveComponent : IComponentData {
+        public int type;
     }
 }

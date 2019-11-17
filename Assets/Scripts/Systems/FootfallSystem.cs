@@ -13,6 +13,7 @@ namespace Systems {
             var delta = Time.deltaTime;
             Entities.ForEach((AudioClipComponent audioClipComp, ref SpriteAnimComponent animComp, ref Translation posComp, ref FootfallComponent footfallComp) => {
                 if (animComp.hash != StatePreset.GetStateHash(StatePreset.Type.Walk)) {
+                    footfallComp.accumTime = 0.0f;
                     return;
                 }
 

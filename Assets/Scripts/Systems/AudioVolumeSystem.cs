@@ -10,16 +10,15 @@ using Components;
 namespace Systems {
     public class AudioVolumeSystem : ComponentSystem {
         protected override void OnUpdate() {
-            var playerPos = new float2();
+            var playerPosX = 0.0f;
             Entities.ForEach((ref PlayerAvatarComponent playerAvatarComp, ref Translation posComp) => {
-                playerPos.x = posComp.Value.x;
-                playerPos.y = posComp.Value.y;
+                playerPosX = posComp.Value.x;
             });
 
             var delta = Time.deltaTime;
             Entities.ForEach((AudioSourceComponent audioSrcComp, ref AudioVolumeComponent audioVolumeComp) => {
                 var center = audioVolumeComp.pos.x + audioVolumeComp.offset.x;
-                var length = math.abs(center - playerPos.x);
+                var length = math.abs(center - playerPosX);
                 var volumeDelta = ((audioVolumeComp.size.x * 0.5f < length) ? -0.2f : 0.2f) * delta;
 
                 var source = audioSrcComp.source;

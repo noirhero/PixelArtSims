@@ -14,13 +14,10 @@ namespace Systems {
 
         protected override void OnUpdate() {
             var playerPos = new float3();
-            Entities.ForEach((ref PlayerAvatarComponent playerComp, ref Translation posComp) =>
-                playerPos = posComp.Value);
+            Entities.ForEach((ref PlayerAvatarComponent playerComp, ref Translation posComp) =>  playerPos = posComp.Value);
 
             var screenPosX = 0.0f;
-            Entities.ForEach((CameraObjectComponent cameraComp) => {
-                screenPosX = cameraComp.camera.WorldToScreenPoint(playerPos).x;
-            });
+            Entities.ForEach((CameraObjectComponent cameraComp) => screenPosX = cameraComp.camera.WorldToScreenPoint(playerPos).x);
 
             Entities.ForEach((GUIPresetComponent guiPresetComp, ref ForceStateComponent forceStateComp) => {
                 GUIPreset guiPreset = guiPresetComp.preset;
@@ -31,6 +28,7 @@ namespace Systems {
                 else if (ForceState.None != _oldState && ForceState.None == (ForceState) forceStateComp.state) {
                     guiPreset.forceStateBalloon.SetActive(false);
                 }
+
                 _oldState = (ForceState) forceStateComp.state;
 
                 if (guiPreset.forceStateBalloon.activeSelf) {

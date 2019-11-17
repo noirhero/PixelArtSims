@@ -4,13 +4,11 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 using Components;
 
 namespace Systems {
     public class InputMovementSystem : ComponentSystem {
         protected override void OnUpdate() {
-            var delta = Time.deltaTime;
             Entities.ForEach((ref ForceStateComponent forceStateComp, ref VelocityComponent velocityComp) => {
                 if (ForceState.None != (ForceState) forceStateComp.state) {
                     velocityComp.velocity.x = 0.0f;

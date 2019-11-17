@@ -4,7 +4,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-
 using Components;
 
 namespace Proxies {
@@ -33,7 +32,7 @@ namespace Proxies {
 
             var audioSource = GetComponent<AudioSource>();
             Debug.Assert(null != audioSource);
-            
+
             dstManager.AddSharedComponentData(entity, new AudioSourceComponent() {
                 source = audioSource
             });

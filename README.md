@@ -6,7 +6,7 @@ https://gumroad.com/l/pixel-logic
 https://kronbits.itch.io/pixatool  
   
 # Design  
-Madness, Eyesight, Agility, Intelligence, Search, Physical, Luck.  
+Madness, Eyesight, Agility, Intelligence, Search, Mentality, Physical, Luck.  
   
 ItemStorage 들은 Search 수치가 있어서 시야에 안 들어오고 얻지 못 한다.  
 OldOne 들은 Eyesight, Agility, Physical, Madness 수치를 들고 있다.

@@ -1,6 +1,5 @@
 ﻿// Copyright 2018-2019 TAP, Inc. All Rights Reserved.
 
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;

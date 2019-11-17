@@ -3,24 +3,24 @@
 using System.Linq;
 using Unity.Entities;
 using UnityEngine;
-
 using Components;
 using Preset;
-using Unity.Mathematics;
 
 namespace Proxies {
     [DisallowMultipleComponent]
     [RequiresEntityConversion]
     public class PlayerAvatarProxy : MonoBehaviour, IConvertGameObjectToEntity {
-        [Header("Preset")]
-        public SpritePreset spritePreset = null;
+        [Header("Preset")] public SpritePreset spritePreset = null;
         public GUIPreset guiPreset = null;
         public AudioClip footfall = null;
 
-        [Header("Property")]
-        public float eyesight = 1.0f;
+        [Header("Property")] public float eyesight = 1.0f;
         public float agility = 1.0f;
         public float intelligence = 1.0f;
+        public float search = 1.0f;
+        public float mentality = 1.0f;
+        public float physical = 1.0f;
+        public float luck = 1.0f;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {
             if (null == spritePreset || null == guiPreset) {
@@ -29,14 +29,15 @@ namespace Proxies {
                 return;
             }
 
-            dstManager.AddComponentData(entity, new PlayerAvatarComponent());
-            dstManager.AddComponentData(entity, new InventoryComponent());
             dstManager.AddComponentData(entity, new SpriteAnimComponent() {
                 hash = spritePreset.datas.Keys.First()
             });
             dstManager.AddComponentData(entity, new VelocityComponent() {
                 xValue = 1.0f
             });
+
+            dstManager.AddComponentData(entity, new PlayerAvatarComponent());
+            dstManager.AddComponentData(entity, new InventoryComponent());
             dstManager.AddComponentData(entity, new AvatarPropertyComponent() {
                 eyesight = eyesight,
                 agility = agility,

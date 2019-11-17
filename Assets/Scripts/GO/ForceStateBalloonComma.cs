@@ -30,16 +30,18 @@ namespace GO {
 
         void Update() {
             _aniTime += Time.deltaTime;
-            if (updateTime <= _aniTime) {
-                _aniTime = 0.0f;
-
-                ++_aniStep;
-                if (_step <= _aniStep) {
-                    _aniStep = 0;
-                }
-
-                commaText.text = _commaStrs[_aniStep];
+            if (updateTime > _aniTime) {
+                return;
             }
+
+            _aniTime = 0.0f;
+
+            ++_aniStep;
+            if (_step <= _aniStep) {
+                _aniStep = 0;
+            }
+
+            commaText.text = _commaStrs[_aniStep];
         }
     }
 }

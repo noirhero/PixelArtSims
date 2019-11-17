@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Preset {
     public class StatePreset : MonoBehaviour {
         public enum Type {
-            None, Idle, Walk, SomethingDoIt, Count
+            Idle, Walk, SomethingDoIt, Count
         }
 
         private static readonly List<int> _hashes = new List<int>();
 
-        private void FillStates() {
+        private static void FillStates() {
             for (var i = 0; i < (int)Type.Count; ++i) {
                 var hash = 0;
                 foreach (var b in Encoding.ASCII.GetBytes(((Type) i).ToString())) {

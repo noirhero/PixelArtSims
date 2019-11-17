@@ -9,13 +9,12 @@ using Components;
 namespace Systems {
     public class CameraMovementSystem : ComponentSystem {
         protected override void OnUpdate() {
-            var dt = Time.deltaTime;
-
+            var deltaTime = Time.deltaTime;
             Entities.ForEach((ref PlayerAvatarComponent playerComp, ref Translation posComp) => {
                 var posX = posComp.Value.x;
                 Entities.ForEach((CameraObjectComponent cameraComp) => {
                     var position = cameraComp.cameraTransform.position;
-                    var at = (posX - position.x) * dt;
+                    var at = (posX - position.x) * deltaTime;
 
                     cameraComp.cameraTransform.position = new Vector3(position.x + at, position.y, position.z);
                 });

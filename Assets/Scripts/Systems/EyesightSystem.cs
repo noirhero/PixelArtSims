@@ -19,7 +19,7 @@ namespace Systems {
         struct EyesightSystemJob : IJobForEachWithEntity<ReactiveComponent, Translation> {
             [ReadOnly] public float xPos;
             [ReadOnly] public float xDir;
-            [ReadOnly] public AvatarPropertyComponent propComp;
+            [ReadOnly] public PlayerAvatarComponent propComp;
             [ReadOnly] public IntelligenceComponent intelligenceComp;
             public Entity playerEntity;
             public EntityCommandBuffer.Concurrent cmdBuf;
@@ -80,13 +80,13 @@ namespace Systems {
             entities.Dispose();
 
             if (Entity.Null == playerEntity) {
-                return new JobHandle();
+                return inputDependencies;
             }
             
             var job = new EyesightSystemJob() {
                 xPos = EntityManager.GetComponentData<Translation>(playerEntity).Value.x,
                 xDir = EntityManager.GetComponentData<VelocityComponent>(playerEntity).xValue,
-                propComp = EntityManager.GetComponentData<AvatarPropertyComponent>(playerEntity),
+                propComp = EntityManager.GetComponentData<PlayerAvatarComponent>(playerEntity),
                 intelligenceComp = EntityManager.GetComponentData<IntelligenceComponent>(playerEntity),
                 playerEntity = playerEntity,
                 cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent()

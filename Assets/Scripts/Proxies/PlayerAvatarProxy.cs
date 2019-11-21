@@ -10,11 +10,13 @@ namespace Proxies {
     [DisallowMultipleComponent]
     [RequiresEntityConversion]
     public class PlayerAvatarProxy : MonoBehaviour, IConvertGameObjectToEntity {
-        [Header("Preset")] public SpritePreset spritePreset = null;
+        [Header("Preset")]
+        public SpritePreset spritePreset = null;
         public GUIPreset guiPreset = null;
         public AudioClip footfall = null;
 
-        [Header("Property")] public float eyesight = 1.0f;
+        [Header("Property")]
+        public float eyesight = 1.0f;
         public float agility = 1.0f;
         public float intelligence = 1.0f;
         public float search = 1.0f;
@@ -36,13 +38,16 @@ namespace Proxies {
                 xValue = 1.0f
             });
 
-            dstManager.AddComponentData(entity, new PlayerAvatarComponent());
-            dstManager.AddComponentData(entity, new InventoryComponent());
-            dstManager.AddComponentData(entity, new AvatarPropertyComponent() {
+            dstManager.AddComponentData(entity, new PlayerAvatarComponent() {
                 eyesight = eyesight,
                 agility = agility,
-                intelligence = intelligence
+                intelligence = intelligence,
+                search = search,
+                mentality = mentality,
+                physical = physical,
+                luck = luck
             });
+            dstManager.AddComponentData(entity, new InventoryComponent());
             dstManager.AddComponentData(entity, new ForceStateComponent());
             dstManager.AddComponentData(entity, new IntelligenceComponent() {
                 inEyesightEntityToDistance = float.MaxValue

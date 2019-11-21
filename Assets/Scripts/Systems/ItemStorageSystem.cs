@@ -45,6 +45,7 @@ namespace Systems {
                 var newInventoryComp = inventory;
                 newInventoryComp.currentGettingItem = itemStorageComp.index;
                 cmdBuf.SetComponent(index, playerEntity, newInventoryComp);
+
                 cmdBuf.SetComponent(index, playerEntity, new ForceStateComponent() {
                     state = (int) ForceState.None
                 });
@@ -54,12 +55,15 @@ namespace Systems {
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDependencies) {
-            var job = new ItemStorageSystemJob() {
-                deltaTime = Time.deltaTime,
-                cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent()
-            };
-
+            var playerEntity = Entity.Null;
             var entities = EntityManager.GetAllEntities();
+            for (var i = 0; i < entities.Length; ++i) {
+                var eachEntity = entities[i];
+                if (EntityManager.HasComponent<PlayerAvatarComponent>(eachEntity)) {
+                    playerEntity = eachEntity;
+                    break;
+                }
+            }
             foreach (var entity in entities.Where(entity =>
                 EntityManager.HasComponent(entity, typeof(PlayerAvatarComponent))
             )) {
@@ -71,6 +75,16 @@ namespace Systems {
                 break;
             }
             entities.Dispose();
+
+            if (Entity.Null == playerEntity) {
+                return inputDependencies;
+            }
+
+            var job = new ItemStorageSystemJob() {
+                deltaTime = Time.deltaTime,
+                cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent(),
+                
+            };
 
             var handle = job.Schedule(this, inputDependencies);
             _cmdSystem.AddJobHandleForProducer(handle);

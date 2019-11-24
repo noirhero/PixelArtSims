@@ -11,10 +11,10 @@ using Components;
 namespace Systems {
     public class MovementSystem : JobComponentSystem {
         [BurstCompile]
-        struct MovementSystemJob : IJobForEach<Translation, VelocityComponent, AvatarPropertyComponent> {
+        struct MovementSystemJob : IJobForEach<Translation, VelocityComponent, PlayerAvatarComponent> {
             [ReadOnly] public float deltaTime;
 
-            public void Execute(ref Translation posComp, [ReadOnly] ref VelocityComponent velocityComp, [ReadOnly] ref AvatarPropertyComponent avatarComp) {
+            public void Execute(ref Translation posComp, [ReadOnly] ref VelocityComponent velocityComp, [ReadOnly] ref PlayerAvatarComponent avatarComp) {
                 posComp.Value.x += velocityComp.velocity.x * avatarComp.agility * deltaTime;
             }
         }

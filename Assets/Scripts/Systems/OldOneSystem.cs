@@ -22,7 +22,7 @@ namespace Systems {
             [ReadOnly] public float deltaTime;
             [ReadOnly] public float playerPosX;
             [ReadOnly] public float playerDirX;
-            [ReadOnly] public AvatarPropertyComponent avatarComp;
+            [ReadOnly] public PlayerAvatarComponent avatarComp;
             public Entity playerEntity;
             public EntityCommandBuffer.Concurrent cmdBuf;
 
@@ -45,21 +45,29 @@ namespace Systems {
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDependencies) {
-            var job = new OldOneSystemJob() {
-                deltaTime = Time.deltaTime,
-                cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent()
-            };
-
+            var playerEntity = Entity.Null;
             var entities = EntityManager.GetAllEntities();
-            foreach (var entity in entities.Where(entity =>
-                EntityManager.HasComponent(entity, typeof(PlayerAvatarComponent))
-            )) {
-                job.playerPosX = EntityManager.GetComponentData<Translation>(entity).Value.x;
-                job.playerDirX = EntityManager.GetComponentData<VelocityComponent>(entity).xValue;
-                job.avatarComp = EntityManager.GetComponentData<AvatarPropertyComponent>(entity);
-                job.playerEntity = entity;
+            for (var i = 0; i < entities.Length; ++i) {
+                var entity = entities[i];
+                if (EntityManager.HasComponent<PlayerAvatarComponent>(entity)) {
+                    playerEntity = entity;
+                    break;
+                }
             }
             entities.Dispose();
+
+            if (Entity.Null == playerEntity) {
+                return inputDependencies;
+            }
+
+            var job = new OldOneSystemJob() {
+                deltaTime = Time.deltaTime,
+                playerPosX = EntityManager.GetComponentData<Translation>(playerEntity).Value.x,
+                playerDirX = EntityManager.GetComponentData<VelocityComponent>(playerEntity).xValue,
+                avatarComp = EntityManager.GetComponentData<PlayerAvatarComponent>(playerEntity),
+                playerEntity = playerEntity,
+                cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent()
+            };
 
             var handle = job.Schedule(this, inputDependencies);
             _cmdSystem.AddJobHandleForProducer(handle);

@@ -1,6 +1,5 @@
 ﻿// Copyright 2018-2019 TAP, Inc. All Rights Reserved.
 
-using System.Linq;
 using UnityEngine;
 using Unity.Collections;
 using Unity.Entities;
@@ -23,7 +22,6 @@ namespace Systems {
             [ReadOnly] public float deltaTime;
             [ReadOnly] public float playerPosX;
             [ReadOnly] public float agility;
-            [ReadOnly] public ForceStateComponent playerForceState;
             [ReadOnly] public InventoryComponent inventory;
             public Entity playerEntity;
             public EntityCommandBuffer.Concurrent cmdBuf;
@@ -64,16 +62,6 @@ namespace Systems {
                     break;
                 }
             }
-            foreach (var entity in entities.Where(entity =>
-                EntityManager.HasComponent(entity, typeof(PlayerAvatarComponent))
-            )) {
-                job.playerEntity = entity;
-                job.playerPosX = EntityManager.GetComponentData<Translation>(entity).Value.x;
-                job.agility = EntityManager.GetComponentData<AvatarPropertyComponent>(entity).agility;
-                job.playerForceState = EntityManager.GetComponentData<ForceStateComponent>(entity);
-                job.inventory = EntityManager.GetComponentData<InventoryComponent>(entity);
-                break;
-            }
             entities.Dispose();
 
             if (Entity.Null == playerEntity) {
@@ -82,8 +70,11 @@ namespace Systems {
 
             var job = new ItemStorageSystemJob() {
                 deltaTime = Time.deltaTime,
-                cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent(),
-                
+                playerPosX = EntityManager.GetComponentData<Translation>(playerEntity).Value.x,
+                agility = EntityManager.GetComponentData<PlayerAvatarComponent>(playerEntity).agility,
+                inventory = EntityManager.GetComponentData<InventoryComponent>(playerEntity),
+                playerEntity = playerEntity,
+                cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent()
             };
 
             var handle = job.Schedule(this, inputDependencies);

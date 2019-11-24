@@ -7,7 +7,7 @@ using Components;
 namespace Systems {
     public class MadnessGUISystem : ComponentSystem {
         protected override void OnUpdate() {
-            Entities.ForEach((GUIPresetComponent guiPresetComp, ref AvatarPropertyComponent avatarComp) => {
+            Entities.ForEach((GUIPresetComponent guiPresetComp, ref PlayerAvatarComponent avatarComp) => {
                 guiPresetComp.preset.madnessGaugeSlider.value = avatarComp.madness * 0.01f;
             });
         }

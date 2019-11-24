@@ -1,11 +1,9 @@
 ﻿// Copyright 2018-2019 TAP, Inc. All Rights Reserved.
 
-using System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Transforms;
-using Unity.Mathematics;
+using UnityEngine;
 
 using Components;
 
@@ -16,79 +14,29 @@ namespace Systems {
             _cmdSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
 
-        struct EyesightSystemJob : IJobForEachWithEntity<ReactiveComponent, Translation> {
-            [ReadOnly] public float xPos;
-            [ReadOnly] public float xDir;
-            [ReadOnly] public PlayerAvatarComponent propComp;
-            [ReadOnly] public IntelligenceComponent intelligenceComp;
-            public Entity playerEntity;
+        struct EyesightSystemJob : IJobForEachWithEntity<EyesightComponent, PlayerAvatarComponent> {
+            [ReadOnly] public float deltaTime;
             public EntityCommandBuffer.Concurrent cmdBuf;
 
-            public void Execute(Entity entity, int index, [ReadOnly] ref ReactiveComponent reactiveComp, [ReadOnly] ref Translation posComp) {
-                if (intelligenceComp.inEyesightEntity == entity) {
+            public void Execute(Entity entity, int index, ref EyesightComponent eyesightComp, [ReadOnly] ref PlayerAvatarComponent propComp) {
+                eyesightComp.thinkingTime += deltaTime * propComp.intelligence;
+                if (eyesightComp.thinkingCompletionTime > eyesightComp.thinkingTime) {
                     return;
                 }
 
-                var at = posComp.Value.x - xPos;
-                var toDistance = math.abs(at);
-                if (propComp.eyesight < toDistance || intelligenceComp.inEyesightEntityToDistance <= toDistance) {
-                    // Not in eyesight.
-                    return;
-                }
-
-                if (0.0f < xDir && 0.0f > at || 0.0f > xDir && 0.0f < at) {
-                    // Looking direction different.
-                    return;
-                }
-
-                var thinkingTime = 1.0f;
-                switch ((ReactiveType) reactiveComp.type) {
-                    case ReactiveType.Item: thinkingTime *= 0.5f;
-                        break;
-                    case ReactiveType.Wall: thinkingTime *= 0.25f;
-                        break;
-                    case ReactiveType.Something: thinkingTime *= 3.0f;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                thinkingTime -= propComp.intelligence;
-
-                cmdBuf.SetComponent(index, playerEntity, new IntelligenceComponent() {
-                    inEyesightEntity = entity,
-                    inEyesightEntityReactiveType = reactiveComp.type,
-                    inEyesightEntityToDistance = toDistance,
-                    inEyesightEntityThinkingTime = thinkingTime
+                cmdBuf.SetComponent(index, entity, new ForceStateComponent() {
+                    state = (int) ForceState.None
                 });
-                cmdBuf.SetComponent(index, playerEntity, new ForceStateComponent() {
-                    state = (int) ForceState.Thinking
+                cmdBuf.AddComponent(index, entity, new TargetComponent() {
+                    target = eyesightComp.target
                 });
+                cmdBuf.RemoveComponent<EyesightComponent>(index, entity);
             }
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDependencies) {
-            Entity playerEntity = Entity.Null;
-
-            var entities = EntityManager.GetAllEntities();
-            foreach (var entity in entities) {
-                if (EntityManager.HasComponent<PlayerAvatarComponent>(entity)) {
-                    playerEntity = entity;
-                    break;
-                }
-            }
-            entities.Dispose();
-
-            if (Entity.Null == playerEntity) {
-                return inputDependencies;
-            }
-            
             var job = new EyesightSystemJob() {
-                xPos = EntityManager.GetComponentData<Translation>(playerEntity).Value.x,
-                xDir = EntityManager.GetComponentData<VelocityComponent>(playerEntity).xValue,
-                propComp = EntityManager.GetComponentData<PlayerAvatarComponent>(playerEntity),
-                intelligenceComp = EntityManager.GetComponentData<IntelligenceComponent>(playerEntity),
-                playerEntity = playerEntity,
+                deltaTime = Time.deltaTime,
                 cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent()
             };
 

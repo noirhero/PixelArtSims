@@ -5,7 +5,6 @@ using Unity.Entities;
 
 namespace Components {
     public enum ReactiveType {
-        None,
         Wall,
         Item,
         Something
@@ -14,5 +13,6 @@ namespace Components {
     [Serializable]
     public struct ReactiveComponent : IComponentData {
         public int type;
+        public float search;
     }
 }

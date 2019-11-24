@@ -17,9 +17,9 @@ namespace Systems {
             _cmdSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
 
-        [RequireComponentTag(typeof(ReactingItemComponent))]
         struct ItemStorageSystemJob : IJobForEachWithEntity<Translation, ItemStorageComponent> {
             [ReadOnly] public float deltaTime;
+            [ReadOnly] public Entity target;
             [ReadOnly] public float playerPosX;
             [ReadOnly] public float agility;
             [ReadOnly] public InventoryComponent inventory;
@@ -27,6 +27,10 @@ namespace Systems {
             public EntityCommandBuffer.Concurrent cmdBuf;
 
             public void Execute(Entity entity, int index, [ReadOnly] ref Translation posComp, ref ItemStorageComponent itemStorageComp) {
+                if (target != entity) {
+                    return;
+                }
+
                 var atPlayerPosDelta = math.abs(playerPosX - posComp.Value.x);
                 if (itemStorageComp.checkRadius < atPlayerPosDelta) {
                     return;
@@ -43,7 +47,7 @@ namespace Systems {
                 var newInventoryComp = inventory;
                 newInventoryComp.currentGettingItem = itemStorageComp.index;
                 cmdBuf.SetComponent(index, playerEntity, newInventoryComp);
-
+                cmdBuf.RemoveComponent<TargetComponent>(index, playerEntity);
                 cmdBuf.SetComponent(index, playerEntity, new ForceStateComponent() {
                     state = (int) ForceState.None
                 });
@@ -64,12 +68,13 @@ namespace Systems {
             }
             entities.Dispose();
 
-            if (Entity.Null == playerEntity) {
+            if (Entity.Null == playerEntity || false == EntityManager.HasComponent<TargetComponent>(playerEntity)) {
                 return inputDependencies;
             }
 
             var job = new ItemStorageSystemJob() {
                 deltaTime = Time.deltaTime,
+                target = EntityManager.GetComponentData<TargetComponent>(playerEntity).target,
                 playerPosX = EntityManager.GetComponentData<Translation>(playerEntity).Value.x,
                 agility = EntityManager.GetComponentData<PlayerAvatarComponent>(playerEntity).agility,
                 inventory = EntityManager.GetComponentData<InventoryComponent>(playerEntity),

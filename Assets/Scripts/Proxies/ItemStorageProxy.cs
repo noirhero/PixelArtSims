@@ -8,12 +8,14 @@ using Unity.Transforms;
 using SuperTiled2Unity;
 
 using Components;
+using UnityEngine.Serialization;
 
 namespace Proxies {
     [DisallowMultipleComponent]
     [RequiresEntityConversion]
     public class ItemStorageProxy : MonoBehaviour, IConvertGameObjectToEntity {
-        public float useTimeSec = 0.0f;
+        public float search = 0.0f;
+        [FormerlySerializedAs("useTimeSec")] public float gettingTimeSec = 0.0f;
         public List<int> randItemIndices = new List<int>();
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {
@@ -28,11 +30,12 @@ namespace Proxies {
 
             dstManager.AddComponentData(entity, new ItemStorageComponent() {
                 index = randItemIndices[new System.Random().Next(0, randItemIndices.Count)],
-                gettingTime = useTimeSec,
+                gettingTime = gettingTimeSec,
                 checkRadius = GetComponent<SphereCollider>().radius 
             });
             dstManager.AddComponentData(entity, new ReactiveComponent() {
-                type = (int) ReactiveType.Item
+                type = (int) ReactiveType.Item,
+                search = search
             });
         }
     }

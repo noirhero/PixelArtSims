@@ -31,6 +31,13 @@ namespace Proxies {
                 return;
             }
 
+            dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
+                preset = spritePreset
+            });
+            dstManager.AddSharedComponentData(entity, new GUIPresetComponent() {
+                preset = guiPreset
+            });
+
             dstManager.AddComponentData(entity, new SpriteAnimComponent() {
                 hash = spritePreset.datas.Keys.First()
             });
@@ -51,13 +58,6 @@ namespace Proxies {
             dstManager.AddComponentData(entity, new ForceStateComponent());
             dstManager.AddComponentData(entity, new IntelligenceComponent() {
                 inEyesightEntityToDistance = float.MaxValue
-            });
-
-            dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
-                preset = spritePreset
-            });
-            dstManager.AddSharedComponentData(entity, new GUIPresetComponent() {
-                preset = guiPreset
             });
 
             if (null != footfall) {

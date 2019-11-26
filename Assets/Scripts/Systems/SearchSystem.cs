@@ -1,6 +1,5 @@
 ﻿// Copyright 2018-2019 TAP, Inc. All Rights Reserved.
 
-using System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -16,6 +15,7 @@ namespace Systems {
             _cmdSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
 
+        [ExcludeComponent(typeof(ReactingTargetComponent))]
         struct SearchSystemJob : IJobForEachWithEntity<ReactiveComponent, Translation> {
             [ReadOnly] public float xPos;
             [ReadOnly] public float xDir;
@@ -43,9 +43,14 @@ namespace Systems {
 
                 var thinkingCompletionTime = 1.0f;
                 switch((ReactiveType) reactiveComp.type) {
-                    case ReactiveType.Item : thinkingCompletionTime = 1.5f;  break;
-                    case ReactiveType.Wall : thinkingCompletionTime = 0.5f;  break;
-                    case ReactiveType.Something : thinkingCompletionTime = 3.0f;  break;
+                    case ReactiveType.Item : thinkingCompletionTime = 1.5f; break;
+                    case ReactiveType.Wall : thinkingCompletionTime = 0.5f; break;
+                    case ReactiveType.Something :
+                        thinkingCompletionTime = 3.0f;
+                        cmdBuf.AddComponent(index, playerEntity, new MadnessComponent() {
+                            value = reactiveComp.madness
+                        });
+                        break;
                 };
 
                 cmdBuf.SetComponent(index, playerEntity, new ForceStateComponent() {
@@ -70,9 +75,7 @@ namespace Systems {
             }
             entities.Dispose();
 
-            if (Entity.Null == playerEntity || 
-                EntityManager.HasComponent<EyesightComponent>(playerEntity) ||
-                EntityManager.HasComponent<TargetComponent>(playerEntity)) {
+            if (Entity.Null == playerEntity || EntityManager.HasComponent<EyesightComponent>(playerEntity)) {
                 return inputDependencies;
             }
             

@@ -24,11 +24,10 @@ namespace Systems {
                     return;
                 }
 
+                cmdBuf.AddComponent<ReactingTargetComponent>(index, eyesightComp.target);
+
                 cmdBuf.SetComponent(index, entity, new ForceStateComponent() {
                     state = (int) ForceState.None
-                });
-                cmdBuf.AddComponent(index, entity, new TargetComponent() {
-                    target = eyesightComp.target
                 });
                 cmdBuf.RemoveComponent<EyesightComponent>(index, entity);
             }

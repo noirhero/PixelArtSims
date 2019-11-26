@@ -14,5 +14,6 @@ namespace Components {
     public struct ReactiveComponent : IComponentData {
         public int type;
         public float search;
+        public float madness;
     }
 }

@@ -12,6 +12,8 @@ namespace Proxies {
     [RequiresEntityConversion]
     public class OldOneProxy : MonoBehaviour, IConvertGameObjectToEntity {
         public SpritePreset spritePreset = null;
+        public float search = 0.0f;
+        public float madness = 0.0f;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {
             if (null == spritePreset) {
@@ -20,17 +22,17 @@ namespace Proxies {
                 return;
             }
 
-            dstManager.AddComponentData(entity, new OldOneComponent() {
-                madness = 20.0f
+            dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
+                preset = spritePreset
             });
+
             dstManager.AddComponentData(entity, new SpriteAnimComponent() {
                 hash = spritePreset.datas.Keys.First()
             });
             dstManager.AddComponentData(entity, new ReactiveComponent() {
-                type = (int) ReactiveType.Something
-            });
-            dstManager.AddSharedComponentData(entity, new SpritePresetComponent() {
-                preset = spritePreset
+                type = (int) ReactiveType.Something,
+                search = search,
+                madness = madness
             });
         }
     }

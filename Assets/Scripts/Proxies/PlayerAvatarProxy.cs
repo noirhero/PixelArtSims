@@ -56,9 +56,6 @@ namespace Proxies {
             });
             dstManager.AddComponentData(entity, new InventoryComponent());
             dstManager.AddComponentData(entity, new ForceStateComponent());
-            dstManager.AddComponentData(entity, new IntelligenceComponent() {
-                inEyesightEntityToDistance = float.MaxValue
-            });
 
             if (null != footfall) {
                 dstManager.AddSharedComponentData(entity, new AudioClipComponent() {

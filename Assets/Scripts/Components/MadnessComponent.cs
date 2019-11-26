@@ -5,7 +5,7 @@ using Unity.Entities;
 
 namespace Components {
     [Serializable]
-    public struct OldOneComponent : IComponentData {
-        public float madness;
+    public struct MadnessComponent : IComponentData {
+        public float value;
     }
 }

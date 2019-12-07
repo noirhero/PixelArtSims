@@ -409,7 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff2124f9c9b098419ce4ba0707e6c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  search: 0
+  search: 1
   gettingTimeSec: 1
   randItemIndices: 0300000004000000
 --- !u!114 &337083084
@@ -2025,7 +2025,7 @@ MonoBehaviour:
   footfall: {fileID: 8300000, guid: e876768ea7e9c434dbfada741227b230, type: 3}
   eyesight: 1
   agility: 1
-  intelligence: 1
+  intelligence: 2
   search: 1
   mentality: 10
   physical: 1
@@ -2623,7 +2623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff2124f9c9b098419ce4ba0707e6c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  search: 0
+  search: 2
   gettingTimeSec: 1
   randItemIndices: 0100000002000000
 --- !u!1 &2145846350
@@ -2657,7 +2657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff2124f9c9b098419ce4ba0707e6c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  search: 0
+  search: 1
   gettingTimeSec: 1
   randItemIndices: 05000000
 --- !u!114 &2145846352

@@ -14,13 +14,13 @@ namespace Systems {
             _cmdSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
 
-        struct EyesightSystemJob : IJobForEachWithEntity<EyesightComponent, PlayerAvatarComponent> {
+        struct EyesightSystemJob : IJobForEachWithEntity<EyesightComponent, AvatarComponent> {
             [ReadOnly] public float deltaTime;
             public EntityCommandBuffer.Concurrent cmdBuf;
 
-            public void Execute(Entity entity, int index, ref EyesightComponent eyesightComp, [ReadOnly] ref PlayerAvatarComponent propComp) {
-                eyesightComp.thinkingTime += deltaTime * propComp.intelligence;
-                if (eyesightComp.thinkingCompletionTime > eyesightComp.thinkingTime) {
+            public void Execute(Entity entity, int index, ref EyesightComponent eyesightComp, [ReadOnly] ref AvatarComponent propComp) {
+                eyesightComp.thinkingTime -= deltaTime * propComp.intelligence;
+                if (0.0f < eyesightComp.thinkingTime) {
                     return;
                 }
 

@@ -23,7 +23,7 @@ namespace Systems {
             [ReadOnly] public float playerPosX;
             [ReadOnly] public float agility;
             [ReadOnly] public InventoryComponent inventory;
-            public Entity playerEntity;
+            public Entity avatarEntity;
             public EntityCommandBuffer.Concurrent cmdBuf;
 
             public void Execute(Entity entity, int index, [ReadOnly] ref Translation posComp, ref ItemStorageComponent itemStorageComp) {
@@ -34,7 +34,7 @@ namespace Systems {
 
                 itemStorageComp.gettingTime -= (agility * deltaTime);
                 if (0.0f < itemStorageComp.gettingTime) {
-                    cmdBuf.SetComponent(index, playerEntity, new ForceStateComponent() {
+                    cmdBuf.SetComponent(index, avatarEntity, new ForceStateComponent() {
                         state = (int) ForceState.Item
                     });
                     return;
@@ -42,8 +42,8 @@ namespace Systems {
 
                 var newInventoryComp = inventory;
                 newInventoryComp.currentGettingItem = itemStorageComp.index;
-                cmdBuf.SetComponent(index, playerEntity, newInventoryComp);
-                cmdBuf.SetComponent(index, playerEntity, new ForceStateComponent() {
+                cmdBuf.SetComponent(index, avatarEntity, newInventoryComp);
+                cmdBuf.SetComponent(index, avatarEntity, new ForceStateComponent() {
                     state = (int) ForceState.None
                 });
 
@@ -52,27 +52,26 @@ namespace Systems {
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDependencies) {
-            var playerEntity = Entity.Null;
+            var avatarEntity = Entity.Null;
             var entities = EntityManager.GetAllEntities();
-            for (var i = 0; i < entities.Length; ++i) {
-                var eachEntity = entities[i];
-                if (EntityManager.HasComponent<PlayerAvatarComponent>(eachEntity)) {
-                    playerEntity = eachEntity;
+            foreach(var entity in entities) {
+                if (EntityManager.HasComponent<AvatarComponent>(entity)) {
+                    avatarEntity = entity;
                     break;
                 }
             }
             entities.Dispose();
 
-            if (Entity.Null == playerEntity) {
+            if (Entity.Null == avatarEntity) {
                 return inputDependencies;
             }
 
             var job = new ItemStorageSystemJob() {
                 deltaTime = Time.deltaTime,
-                playerPosX = EntityManager.GetComponentData<Translation>(playerEntity).Value.x,
-                agility = EntityManager.GetComponentData<PlayerAvatarComponent>(playerEntity).agility,
-                inventory = EntityManager.GetComponentData<InventoryComponent>(playerEntity),
-                playerEntity = playerEntity,
+                playerPosX = EntityManager.GetComponentData<Translation>(avatarEntity).Value.x,
+                agility = EntityManager.GetComponentData<AvatarComponent>(avatarEntity).agility,
+                inventory = EntityManager.GetComponentData<InventoryComponent>(avatarEntity),
+                avatarEntity = avatarEntity,
                 cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent()
             };
 

@@ -19,11 +19,15 @@ namespace Systems {
         struct SearchSystemJob : IJobForEachWithEntity<ReactiveComponent, Translation> {
             [ReadOnly] public float xPos;
             [ReadOnly] public float xDir;
-            [ReadOnly] public PlayerAvatarComponent propComp;
-            public Entity playerEntity;
+            [ReadOnly] public AvatarComponent propComp;
+            public Entity avatarEntity;
             public EntityCommandBuffer.Concurrent cmdBuf;
 
             public void Execute(Entity entity, int index, [ReadOnly] ref ReactiveComponent reactiveComp, [ReadOnly] ref Translation posComp) {
+                if (avatarEntity == entity) {
+                    return;
+                }
+
                 if (reactiveComp.search > propComp.search) {
                     // Not in search.
                     return;
@@ -41,49 +45,49 @@ namespace Systems {
                     return;
                 }
 
-                var thinkingCompletionTime = 1.0f;
+                var thinkingTime = 1.0f;
                 switch((ReactiveType) reactiveComp.type) {
-                    case ReactiveType.Item : thinkingCompletionTime = 1.5f; break;
-                    case ReactiveType.Wall : thinkingCompletionTime = 0.5f; break;
+                    case ReactiveType.Item : thinkingTime = 1.5f; break;
+                    case ReactiveType.Wall : thinkingTime = 0.5f; break;
                     case ReactiveType.Something :
-                        thinkingCompletionTime = 3.0f;
-                        cmdBuf.AddComponent(index, playerEntity, new MadnessComponent() {
+                        thinkingTime = 3.0f;
+                        cmdBuf.AddComponent(index, avatarEntity, new MadnessComponent() {
                             value = reactiveComp.madness
                         });
                         break;
                 };
 
-                cmdBuf.SetComponent(index, playerEntity, new ForceStateComponent() {
+                cmdBuf.SetComponent(index, avatarEntity, new ForceStateComponent() {
                     state = (int) ForceState.Thinking
                 });
-                cmdBuf.AddComponent(index, playerEntity, new EyesightComponent() {
+                cmdBuf.AddComponent(index, avatarEntity, new EyesightComponent() {
                     target = entity,
-                    thinkingCompletionTime = thinkingCompletionTime
+                    thinkingTime = thinkingTime
                 });
             }
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDependencies) {
-            Entity playerEntity = Entity.Null;
+            Entity avatarEntity = Entity.Null;
 
             var entities = EntityManager.GetAllEntities();
             foreach (var entity in entities) {
-                if (EntityManager.HasComponent<PlayerAvatarComponent>(entity)) {
-                    playerEntity = entity;
+                if (EntityManager.HasComponent<AvatarComponent>(entity)) {
+                    avatarEntity = entity;
                     break;
                 }
             }
             entities.Dispose();
 
-            if (Entity.Null == playerEntity || EntityManager.HasComponent<EyesightComponent>(playerEntity)) {
+            if (Entity.Null == avatarEntity || EntityManager.HasComponent<EyesightComponent>(avatarEntity)) {
                 return inputDependencies;
             }
             
             var job = new SearchSystemJob() {
-                xPos = EntityManager.GetComponentData<Translation>(playerEntity).Value.x,
-                xDir = EntityManager.GetComponentData<VelocityComponent>(playerEntity).xValue,
-                propComp = EntityManager.GetComponentData<PlayerAvatarComponent>(playerEntity),
-                playerEntity = playerEntity,
+                xPos = EntityManager.GetComponentData<Translation>(avatarEntity).Value.x,
+                xDir = EntityManager.GetComponentData<VelocityComponent>(avatarEntity).xValue,
+                propComp = EntityManager.GetComponentData<AvatarComponent>(avatarEntity),
+                avatarEntity = avatarEntity,
                 cmdBuf = _cmdSystem.CreateCommandBuffer().ToConcurrent()
             };
 

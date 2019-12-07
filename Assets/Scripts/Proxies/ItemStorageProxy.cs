@@ -15,7 +15,7 @@ namespace Proxies {
     [RequiresEntityConversion]
     public class ItemStorageProxy : MonoBehaviour, IConvertGameObjectToEntity {
         public float search = 0.0f;
-        [FormerlySerializedAs("useTimeSec")] public float gettingTimeSec = 0.0f;
+        public float gettingTimeSec = 0.0f;
         public List<int> randItemIndices = new List<int>();
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem) {

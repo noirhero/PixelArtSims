@@ -11,10 +11,10 @@ using Components;
 namespace Systems {
     public class MadnessSystem : JobComponentSystem {
         [BurstCompile]
-        struct MadnessSystemJob : IJobForEach<PlayerAvatarComponent, MadnessComponent> {
+        struct MadnessSystemJob : IJobForEach<AvatarComponent, MadnessComponent> {
             [ReadOnly] public float deltaTime;
 
-            public void Execute(ref PlayerAvatarComponent propComp, [ReadOnly] ref MadnessComponent madnessComp) {
+            public void Execute(ref AvatarComponent propComp, [ReadOnly] ref MadnessComponent madnessComp) {
                 propComp.madness += madnessComp.value * deltaTime - propComp.mentality * deltaTime;
             }
         }

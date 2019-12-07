@@ -11,7 +11,7 @@ namespace Systems {
     public class WallSystem : ComponentSystem {
         protected override void OnUpdate() {
             var playerAvatarEntity = Entity.Null;
-            Entities.WithAll<PlayerAvatarComponent>().ForEach((Entity entity) => playerAvatarEntity = entity);
+            Entities.WithAll<AvatarComponent>().ForEach((Entity entity) => playerAvatarEntity = entity);
             if (Entity.Null == playerAvatarEntity) {
                 return;
             }

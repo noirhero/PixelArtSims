@@ -45,7 +45,7 @@ namespace Proxies {
                 xValue = 1.0f
             });
 
-            dstManager.AddComponentData(entity, new PlayerAvatarComponent() {
+            dstManager.AddComponentData(entity, new AvatarComponent() {
                 eyesight = eyesight,
                 agility = agility,
                 intelligence = intelligence,

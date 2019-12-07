@@ -11,7 +11,7 @@ namespace Systems {
     public class AudioVolumeSystem : ComponentSystem {
         protected override void OnUpdate() {
             var playerPosX = 0.0f;
-            Entities.ForEach((ref PlayerAvatarComponent playerAvatarComp, ref Translation posComp) => {
+            Entities.ForEach((ref AvatarComponent playerAvatarComp, ref Translation posComp) => {
                 playerPosX = posComp.Value.x;
             });
 

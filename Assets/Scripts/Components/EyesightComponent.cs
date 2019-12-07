@@ -7,7 +7,6 @@ namespace Components {
     [Serializable]
     public struct EyesightComponent : IComponentData {
         public Entity target;
-        public float thinkingCompletionTime;
         public float thinkingTime;
     }
 }
